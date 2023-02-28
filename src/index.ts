@@ -7,7 +7,7 @@ import deIndent from "de-indent";
 
 export function qiankun({
   appName,
-  port,
+  port = 8001,
 }: {
   appName: string;
   port?: number;
@@ -23,6 +23,9 @@ export function qiankun({
           server: {
             port: realPort,
             origin: `http://localhost:${realPort}`,
+          },
+          optimizeDeps: {
+            exclude: ["vite-plugin-react-qiankun"],
           },
         };
       },
