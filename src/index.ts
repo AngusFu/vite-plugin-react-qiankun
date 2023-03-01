@@ -30,6 +30,7 @@ export function qiankun({
         };
       },
     },
+    modifyLegacyEntry(),
     injectQiankunPlaceholder(appName),
     rewriteModuleScripts(),
 
@@ -48,17 +49,18 @@ function rewriteModuleScripts(): Plugin {
         const $ = loadHTML(html);
 
         $('script[type="module"]:not([src])').remove();
-        $('script[type="module"][src]').each((_, el) => {
-          $(el).replaceWith(
-            str(`
-              <script>
-                import(new URL("${$(el).attr(
-                  "src"
-                )}", window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__));
-              </script>
-            `)
-          );
-        });
+        $('script[type="module"][src]')
+          .toArray()
+          .map((el) => [el, $(el).attr("src")])
+          .forEach(([el, src]) => {
+            $(el).replaceWith(
+              str(`
+                <script type="module">
+                  import(new URL("${src}", window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__).href);
+                </script>
+              `)
+            );
+          });
 
         return $.root().html()!;
       },
@@ -70,6 +72,7 @@ function injectQiankunPlaceholder(appName: string): Plugin {
   let base = "";
   return {
     name: "inject-qiankun-placeholder",
+    enforce: "post",
     configResolved(config) {
       base = config.base;
     },
@@ -84,9 +87,11 @@ function injectQiankunPlaceholder(appName: string): Plugin {
         `)
       );
 
-      $("body").append(
-        str(`
-          <script>
+      const tags = [
+        {
+          tag: "script",
+          injectTo: "body" as const,
+          children: str(` 
             const createDeffer = (hookName) => {
               const d = new Promise((resolve, reject) => {
                 window.proxy && (window.proxy[\`vite$\{hookName}\`] = resolve);
@@ -106,9 +111,31 @@ function injectQiankunPlaceholder(appName: string): Plugin {
                 unmount,
                 update,
               };
-            })(window);
-          </script>
-        `)
+            })(window); 
+          `),
+        },
+      ];
+
+      return {
+        tags,
+        html: $.root().html()!,
+      };
+    },
+  };
+}
+
+function modifyLegacyEntry(): Plugin {
+  return {
+    name: "modify-legacy-entry",
+    enforce: "post",
+
+    transformIndexHtml(html) {
+      const $ = loadHTML(html);
+      const $el = $("script[nomodule][data-src]");
+      const src = JSON.stringify($el.attr("data-src"));
+      $el.removeAttr("data-src");
+      $el.html(
+        `System.import(new URL(${src}, window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__).href);`
       );
 
       return $.root().html()!;
