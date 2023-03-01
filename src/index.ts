@@ -5,12 +5,16 @@ import portfinder from "portfinder";
 // @ts-ignore
 import deIndent from "de-indent";
 
+import legacyHTMLEntry from "./legacy-html-entry";
+
 export function qiankun({
   appName,
   port = 8001,
+  legacyEntry = false,
 }: {
   appName: string;
   port?: number;
+  legacyEntry?: boolean;
 }): Plugin[] {
   return [
     {
@@ -35,7 +39,9 @@ export function qiankun({
     rewriteModuleScripts(),
 
     ...virtualPreambles(),
-  ];
+
+    legacyEntry && legacyHTMLEntry(),
+  ].filter(Boolean) as Plugin[];
 }
 
 function rewriteModuleScripts(): Plugin {
