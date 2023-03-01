@@ -2,15 +2,14 @@
 import "virtual:react-preamble-module";
 
 export interface QiankunProps {
-  container?: HTMLElement;
   [x: string]: any;
 }
 
 export type QiankunLifeCycle = {
-  bootstrap: () => void | Promise<void>;
-  mount: (props: QiankunProps) => void | Promise<void>;
-  unmount: (props: QiankunProps) => void | Promise<void>;
-  update: (props: QiankunProps) => void | Promise<void>;
+  bootstrap?: (props: QiankunProps) => void | Promise<void>;
+  mount?: (props: QiankunProps) => void | Promise<void>;
+  unmount?: (props: QiankunProps) => void | Promise<void>;
+  update?: (props: QiankunProps) => void | Promise<void>;
 };
 
 export interface QiankunWindow {
