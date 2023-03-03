@@ -86,14 +86,6 @@ function injectQiankunPlaceholder(appName: string): Plugin {
     transformIndexHtml(html) {
       const $ = loadHTML(html);
 
-      $("head").prepend(
-        str(`
-          <script>
-            window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ || \`$\{location.origin}${base}\`;
-          </script>
-        `)
-      );
-
       const tags = [
         {
           tag: "script",
