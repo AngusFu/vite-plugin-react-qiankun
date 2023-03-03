@@ -37,6 +37,7 @@ export function qiankun({
     modifyLegacyEntry(),
     injectQiankunPlaceholder(appName),
     rewriteModuleScripts(),
+    removePreloadLinks(),
 
     ...virtualPreambles(),
 
@@ -128,6 +129,24 @@ function injectQiankunPlaceholder(appName: string): Plugin {
       };
     },
   };
+}
+
+function removePreloadLinks(): Plugin {
+
+  return {
+    name: "remove-preload-links",
+    enforce: "post",
+
+    transformIndexHtml(html) {
+      const $ = loadHTML(html);
+
+      $("link[rel=preload]").remove();
+      $("link[rel=prefetch]").remove();
+      $("link[rel=modulepreload]").remove();
+
+      return $.root().html()!;
+    },
+  }
 }
 
 function modifyLegacyEntry(): Plugin {
