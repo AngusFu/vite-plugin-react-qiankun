@@ -7,6 +7,8 @@ import deIndent from "de-indent";
 
 import legacyHTMLEntry from "./legacy-html-entry";
 
+export { legacyHTMLEntry };
+
 export function qiankun({
   appName,
   port = 8001,
@@ -85,14 +87,6 @@ function injectQiankunPlaceholder(appName: string): Plugin {
     },
     transformIndexHtml(html) {
       const $ = loadHTML(html);
-
-      $("head").prepend(
-        str(`
-          <script>
-            window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ || \`$\{location.origin}${base}\`;
-          </script>
-        `)
-      );
 
       const tags = [
         {
