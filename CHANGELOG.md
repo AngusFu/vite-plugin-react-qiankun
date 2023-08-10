@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/AngusFu/vite-plugin-react-qiankun/compare/v1.1.1...v1.1.2) (2023-08-10)
+
+
+### Bug Fixes
+
+* publish issue ([fe6962b](https://github.com/AngusFu/vite-plugin-react-qiankun/commit/fe6962b089e3a289c6e1f622c3fb604b5674ad1b))
+
 ### [1.1.1](https://github.com/AngusFu/vite-plugin-react-qiankun/compare/v1.1.0...v1.1.1) (2023-08-10)
 
 
