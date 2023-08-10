@@ -5,7 +5,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npx tsup src/index.ts src/helper.ts src/helper.*.ts --dts --format esm,cjs --external virtual:react-preamble-module",
+    "build": "npx tsup src/index.ts src/helper.ts src/helper.vue.ts --dts --format esm,cjs --external virtual:react-preamble-module",
     "prepublish": "npm run build"
   },
   "keywords": [],
